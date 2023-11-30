@@ -40,7 +40,7 @@
                     let name = document.querySelector('#nameInput');
                     name = encodeURIComponent(name.value);
                     const result = document.querySelector('#result');
-                    fetch(`/hello/${name}`)
+                    fetch(`/share/${name}`)
                         .then(response => {
                             if (response.status === 200) {
                                 response.text().then(content => result.textContent = content);
