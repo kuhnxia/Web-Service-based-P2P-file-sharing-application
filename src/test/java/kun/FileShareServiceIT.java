@@ -1,11 +1,16 @@
 package kun;
 
-import static org.junit.Assert.assertEquals;
+import kun.connector.DatabaseConnector;
+import kun.dao.SharedFileDao;
+import kun.entity.SharedFile;
+import kun.service.FileShareService;
 
+import static org.junit.Assert.assertEquals;
 import jakarta.inject.Inject;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,16 +19,21 @@ import org.junit.runner.RunWith;
  * Run integration tests with Arquillian to be able to test CDI beans
  */
 @RunWith(Arquillian.class)
-public class  GettingStartedServiceIT {
+public class FileShareServiceIT {
 
     @Deployment
     public static WebArchive createTestArchive() {
-        return ShrinkWrap.create(WebArchive.class, "GettingStartedServiceIT.war")
-                .addClass(GettingStartedService.class);
+        return ShrinkWrap.create(WebArchive.class, "FileShareServiceIT.war")
+                .addClass(FileShareService.class)
+                .addClass(FileShareServiceIT.class)
+                .addClass(SharedFileDao.class)
+                .addClass(SharedFile.class)
+                .addClass(DatabaseConnector.class)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Inject
-    GettingStartedService service;
+    FileShareService service;
 
     @Test
     public void testService() {

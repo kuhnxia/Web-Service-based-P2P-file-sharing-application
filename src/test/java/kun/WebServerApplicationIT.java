@@ -17,14 +17,14 @@ import org.junit.runner.RunWith;
  */
 @RunAsClient
 @RunWith(Arquillian.class)
-public class GettingStartedApplicationIT {
+public class WebServerApplicationIT {
 
     @Test
     public void testHelloEndpoint() {
         try (Client client = ClientBuilder.newClient()) {
             Response response = client
                     .target(URI.create("http://localhost:8080/"))
-                    .path("/hello/World")
+                    .path("/share/World")
                     .request()
                     .get();
 

@@ -1,4 +1,4 @@
-package kun;
+package kun.enpoint;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -8,11 +8,13 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import kun.service.FileShareService;
+
 @Path("/")
-public class GettingStartedEndpoint {
+public class FileShareEndpoint {
 
 	@Inject
-	private GettingStartedService service;
+	private FileShareService service;
 
 	@GET
 	@Path("/{name}")

@@ -1,15 +1,25 @@
 package kun.connector;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 import java.sql.*;
 
 /**
  * The DatabaseConnector class is responsible for establishing and managing connections to the MySQL database.
  */
+@ApplicationScoped
 public class DatabaseConnector {
-    private static final String URL = "jdbc:mysql://localhost:3306/";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "MyNewPass";
-    private static final String DATABASE_NAME = "p2p_file_sharing_db";
+    private final String URL = "jdbc:mysql://localhost:3306/";
+    private final String USERNAME = "root";
+    private final String PASSWORD = "MyNewPass";
+    private final String DATABASE_NAME = "p2p_file_sharing_db";
+
+    /**
+     * Default constructor for CDI.
+     */
+    public DatabaseConnector() {
+        initialize();
+    }
 
     /**
      * Gets a connection to the MySQL database.
@@ -17,14 +27,14 @@ public class DatabaseConnector {
      * @return A Connection object representing the database connection.
      * @throws SQLException If a database access error occurs.
      */
-    public static Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL+DATABASE_NAME, USERNAME, PASSWORD);
     }
 
     /**
      * Initializes the database by creating necessary tables.
      */
-    public static void initialize() {
+    public void initialize() {
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
              Statement statement = connection.createStatement()) {
 
