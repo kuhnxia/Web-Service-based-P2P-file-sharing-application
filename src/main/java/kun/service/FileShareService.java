@@ -98,9 +98,12 @@ public class FileShareService {
      * @return The socket address in the format "ip_address:port".
      */
     public String getSocketAddressById(int id){
+        String socketInfo = "";
         // Get the target file to share.
         SharedFile targetFile = sharedFileDao.getSharedFileById(id);
+        if (targetFile != null)
+            socketInfo = targetFile.getIpAddress() + ":" + targetFile.getPort();
+        return socketInfo;
 
-        return targetFile.getIpAddress() + ":" + targetFile.getPort();
     }
 }
