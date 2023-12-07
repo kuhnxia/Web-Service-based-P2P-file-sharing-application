@@ -1,6 +1,6 @@
 # Web-Service-based-P2P-file-sharing-application
 
-- The `src/main` folder contains a simple 'Hello world' style Jakarta EE application using JAX-RS.
+- This is a Jboss Server for file information registration issues.
 
 ## Building the application
 
