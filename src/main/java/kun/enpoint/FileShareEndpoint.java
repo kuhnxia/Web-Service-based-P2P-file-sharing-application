@@ -34,9 +34,10 @@ public class FileShareEndpoint {
 		return Response.ok(response).build();
 	}
 
-	@DELETE
+	@PUT
 	@Path("/cancelSharing")
 	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response cancelSharing(
 			@FormParam("fileName") String fileName,
 			@FormParam("ipAddress") String ipAddress,
