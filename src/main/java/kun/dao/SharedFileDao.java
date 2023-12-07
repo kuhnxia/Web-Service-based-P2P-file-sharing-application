@@ -24,39 +24,29 @@ public class SharedFileDao {
     @Inject
     private DatabaseConnector databaseConnector;
 
-    public String createSharedFile(SharedFile sharedFile) {
-        String message = null;
-        try (Connection connection = databaseConnector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO SharedFiles (file_name, ip_address, port) VALUES (?, ?, ?)",
-                     Statement.RETURN_GENERATED_KEYS)) {
+    public boolean createSharedFile(SharedFile sharedFile) throws SQLException {
+        Connection connection = databaseConnector.getConnection();
 
-            preparedStatement.setString(1, sharedFile.getFilename());
-            preparedStatement.setString(2, sharedFile.getIpAddress());
-            preparedStatement.setInt(3, sharedFile.getPort());
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                "INSERT INTO SharedFiles (file_name, ip_address, port) VALUES (?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setString(1, sharedFile.getFilename());
+        preparedStatement.setString(2, sharedFile.getIpAddress());
+        preparedStatement.setInt(3, sharedFile.getPort());
 
-            int affectedRows = preparedStatement.executeUpdate();
+        int affectedRows = preparedStatement.executeUpdate();
+        if (affectedRows == 0)
+            throw new SQLException("Creating shared file failed, no rows affected.");
 
-            if (affectedRows == 0) {
-                message = "Creating shared file failed, no rows affected.";
-                throw new SQLException(message);
-            }
-
-            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    sharedFile.setId(generatedKeys.getInt(1));
-                    message = "File registered: " + sharedFile;
-                } else {
-                    message = "Creating shared file failed, no ID obtained.";
-                    throw new SQLException(message);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            message = "Error: " + e;
+        ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+        if (generatedKeys.next()){
+            return true;
+        } else {
+            throw new SQLException("Creating shared file failed, no ID obtained.");
         }
-        return message;
+
     }
+
 
     /**
      * Retrieves a shared file from the database based on its ID.
@@ -64,23 +54,19 @@ public class SharedFileDao {
      * @param fileId The ID of the shared file.
      * @return The SharedFile object representing the retrieved file, or null if not found.
      */
-    public SharedFile getSharedFileById(int fileId) {
-        try (Connection connection = databaseConnector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT * FROM SharedFiles WHERE id = ?")) {
+    public SharedFile getSharedFileById(int fileId) throws SQLException {
+        Connection connection = databaseConnector.getConnection();
 
-            preparedStatement.setInt(1, fileId);
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                "SELECT * FROM SharedFiles WHERE id = ?");
+        preparedStatement.setInt(1, fileId);
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return mapResultSetToSharedFile(resultSet);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            return mapResultSetToSharedFile(resultSet);
+        } else {
+            return null;
         }
-
-        return null;
     }
 
     /**
@@ -88,19 +74,16 @@ public class SharedFileDao {
      *
      * @return A list of SharedFile objects representing all shared files in the database.
      */
-    public List<SharedFile> getAllSharedFiles() {
+    public List<SharedFile> getAllSharedFiles() throws SQLException {
         List<SharedFile> sharedFiles = new ArrayList<>();
 
-        try (Connection connection = databaseConnector.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * FROM SharedFiles")) {
+        Connection connection = databaseConnector.getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM SharedFiles");
 
-            while (resultSet.next()) {
-                SharedFile sharedFile = mapResultSetToSharedFile(resultSet);
-                sharedFiles.add(sharedFile);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        while (resultSet.next()) {
+            SharedFile sharedFile = mapResultSetToSharedFile(resultSet);
+            sharedFiles.add(sharedFile);
         }
 
         return sharedFiles;
@@ -112,21 +95,17 @@ public class SharedFileDao {
      * @param fileId The ID of the shared file to be deleted.
      * @return A message indicating the result of the operation.
      */
-    public String deleteSharedFile(int fileId) {
-        String message = null;
-        try (Connection connection = databaseConnector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "DELETE FROM SharedFiles WHERE id = ?")) {
+    public boolean deleteSharedFile(int fileId) throws SQLException {
+        Connection connection = databaseConnector.getConnection();
 
-            preparedStatement.setInt(1, fileId);
-            preparedStatement.executeUpdate();
-            message = "The shared file has no longer shareable.";
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                "DELETE FROM SharedFiles WHERE id = ?");
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            message = "Error: " + e;
-        }
-        return message;
+        preparedStatement.setInt(1, fileId);
+        preparedStatement.executeUpdate();
+
+        return true;
+
     }
 
     /**

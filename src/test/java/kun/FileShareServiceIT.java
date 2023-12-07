@@ -3,6 +3,8 @@ package kun;
 import kun.connector.DatabaseConnector;
 import kun.dao.SharedFileDao;
 import kun.entity.SharedFile;
+import kun.exceptions.ConflictException;
+import kun.exceptions.NotModifiedException;
 import kun.service.FileShareService;
 
 import static org.junit.Assert.assertEquals;
@@ -29,6 +31,8 @@ public class FileShareServiceIT {
                 .addClass(SharedFileDao.class)
                 .addClass(SharedFile.class)
                 .addClass(DatabaseConnector.class)
+                .addClass(NotModifiedException.class)
+                .addClass(ConflictException.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 

@@ -69,8 +69,7 @@ public class FileShareEndpointIT {
                     .target(URI.create(BASE_URI))
                     .path("/cancelSharing")
                     .request()
-                    .build("DELETE", Entity.form(form))
-                    .invoke();
+                    .put(Entity.form(form));
 
             assertEquals(200, response.getStatus());
             // Add additional assertions based on your service behavior
@@ -87,7 +86,7 @@ public class FileShareEndpointIT {
                     .request()
                     .get();
 
-            assertEquals(200, response.getStatus());
+            assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
             // Add additional assertions based on your service behavior
         }
     }
@@ -97,11 +96,11 @@ public class FileShareEndpointIT {
         try (Client client = ClientBuilder.newClient()) {
             Response response = client
                     .target(URI.create(BASE_URI))
-                    .path("/getSocketAddressById/1")
+                    .path("/getSocketAddressById/1000")
                     .request()
                     .get();
 
-            assertEquals(200, response.getStatus());
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
             // Add additional assertions based on your service behavior
         }
     }

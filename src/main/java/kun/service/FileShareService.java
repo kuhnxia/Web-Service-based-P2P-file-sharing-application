@@ -3,7 +3,10 @@ package kun.service;
 import jakarta.inject.Inject;
 import kun.dao.SharedFileDao;
 import kun.entity.SharedFile;
+import kun.exceptions.ConflictException;
+import kun.exceptions.NotModifiedException;
 
+import java.sql.SQLException;
 import java.util.List;
 import jakarta.enterprise.context.ApplicationScoped;
 /**
@@ -28,7 +31,7 @@ public class FileShareService {
      * @param port      The port on which the client is sharing the file.
      * @return A message indicating the success or failure of the registration process.
      */
-    public String registerFile(String fileName, String ipAddress, int port) {
+    public boolean registerFile(String fileName, String ipAddress, int port) throws SQLException {
         SharedFile newSharedFile = new SharedFile(fileName, ipAddress, port);
 
         // Get all the share files from the database.
@@ -37,7 +40,7 @@ public class FileShareService {
         // Check if the share file already exists.
         for (SharedFile sharedFile : sharedFiles){
             if (newSharedFile.equals(sharedFile))
-                return "The shared file already exists";
+                throw new ConflictException("The shared file already exists");
         }
 
         // Register the file.
@@ -53,7 +56,7 @@ public class FileShareService {
      * @param port      The port on which the client is canceling the sharing.
      * @return A message indicating the success or failure of the canceling process.
      */
-    public String cancelSharing(String fileName, String ipAddress, int port){
+    public boolean cancelSharing(String fileName, String ipAddress, int port) throws SQLException {
         SharedFile newSharedFile = new SharedFile(fileName, ipAddress, port);
 
         // Get all the share files from the database.
@@ -67,7 +70,7 @@ public class FileShareService {
             }
         }
 
-        return "The shared file doesn't exist";
+        throw new NotModifiedException("The shared file doesn't exist");
     }
 
     /**
@@ -76,7 +79,7 @@ public class FileShareService {
      * @param filename The name of the file to be searched.
      * @return A string containing the IDs of the shared files with the target filename.
      */
-    public String findSharedFiles(String filename){
+    public String findSharedFiles(String filename) throws SQLException {
         // Get all the share files from the database.
         List<SharedFile> sharedFiles = sharedFileDao.getAllSharedFiles();
 
@@ -97,7 +100,7 @@ public class FileShareService {
      * @param id The ID of the shared file.
      * @return The socket address in the format "ip_address:port".
      */
-    public String getSocketAddressById(int id){
+    public String getSocketAddressById(int id) throws SQLException {
         String socketInfo = "";
         // Get the target file to share.
         SharedFile targetFile = sharedFileDao.getSharedFileById(id);
