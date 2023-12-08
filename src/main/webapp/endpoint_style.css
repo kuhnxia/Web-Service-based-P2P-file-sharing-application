@@ -1,0 +1,37 @@
+body {
+    font-size: 16px;
+}
+@media only screen and (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+}
+label {
+    display: inline-block;
+    width: 150px;
+    text-align: right;
+    margin-right: 10px;
+}
+div {
+    margin-bottom: 10px;
+}
+div label {
+    text-align: left;
+}
+
+#left {
+    float: left;
+    width: 45%;
+    margin-right: 5%;
+}
+
+#right {
+    float: right;
+    width: 45%;
+    margin-left: 5%;
+}
+.wrapper::after {
+    content: "";
+    display: table;
+    clear: both;
+}

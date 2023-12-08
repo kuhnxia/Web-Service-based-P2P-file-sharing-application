@@ -30,28 +30,7 @@
     <link rel="stylesheet" href="normalize.min.css">
     <link rel="stylesheet" href="wildfly.css">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
-    <script>
-        (() => {
-            "use script";
-            window.addEventListener("load", () => {
-                const button = document.querySelector("button[type='submit']");
-                button.addEventListener("click", (event) => {
-                    event.preventDefault();
-                    let name = document.querySelector('#nameInput');
-                    name = encodeURIComponent(name.value);
-                    const result = document.querySelector('#result');
-                    fetch(`/share/hello/${name}`)
-                        .then(response => {
-                            if (response.status === 200) {
-                                response.text().then(content => result.textContent = content);
-                            } else {
-                                result.textContent = `Unexpected response ${response.status}`;
-                            }
-                        });
-                });
-            });
-        })();
-    </script>
+    <link rel="stylesheet" href="endpoint_style.css">
 </head>
 <body>
 <div class="wrapper">
@@ -59,67 +38,64 @@
         <div class="logo">
             <img src="wildfly_logo.png" alt="Logo" title="Logo"/>
         </div>
-        <h1>Getting Started</h1>
+        <h1>P2P File Share Management System</h1>
         <div id="interactive">
             <form name="nameForm">
-                <label for="nameInput">Name: </label>
-                <input type="text" id="nameInput">
-                <button type="submit">Say Hello</button>
-            </form>
-            <p id="result">
-            </p>
+                <div id = "left">
+                    <h3>For the Files Belong to You</h3>
+                    <h4>Enter Your File Name with Client Socket Address</h4>
+                    <div>
+                        <label for="ipAddressInput">Enter IP: </label>
+                        <input type="text" id="ipAddressInput" name="ipAddress">
+                    </div>
+                    <div>
+                        <label for="portInput">Enter Port: </label>
+                        <input type="number" id="portInput" name="port">
+                    </div>
+                    <div>
+                        <label for="fileNameInput">Enter Your File Name: </label>
+                        <input type="text" id="fileNameInput" name="fileName">
+                    </div>
 
-            <!-- Test registerFile endpoint -->
-            <form id="registerFileForm">
-                <label for="fileNameInput">File Name: </label>
-                <input type="text" id="fileNameInput" name="fileName">
-                <label for="ipAddressInput">IP Address: </label>
-                <input type="text" id="ipAddressInput" name="ipAddress">
-                <label for="portInput">Port: </label>
-                <input type="number" id="portInput" name="port">
-                <button type="button" onclick="registerFile()">Register File</button>
-            </form>
-            <p id="registered?">
-            </p>
+                    <h4>Register Your File with above Socket Address</h4>
+                    <div></div>
+                    <button type="button" onclick="registerFile()">Register</button>
+                    <p id = "registered?"></p>
 
-            <!-- Test cancelSharing endpoint -->
-            <form id="cancelSharingForm">
-                <label for="cancelFileNameInput">File Name: </label>
-                <input type="text" id="cancelFileNameInput" name="fileName">
-                <label for="cancelIpAddressInput">IP Address: </label>
-                <input type="text" id="cancelIpAddressInput" name="ipAddress">
-                <label for="cancelPortInput">Port: </label>
-                <input type="number" id="cancelPortInput" name="port">
-                <button type="button" onclick="cancelSharing()">Cancel Sharing</button>
-            </form>
-            <p id="cancelled?">
-            </p>
+                    <h4>Cancel Your File with above Socket Address</h4>
+                    <div>
+                        <button type="button" onclick="cancelSharing()">Cancel</button>
+                        <p id = "cancelled?"></p>
+                    </div>
+                </div>
 
-            <!-- Test findSharedFiles endpoint -->
-            <form id="findSharedFilesForm">
-                <label for="findFilesInput">File Name: </label>
-                <input type="text" id="findFilesInput" name="filename">
-                <button type="button" onclick="findSharedFiles()">Find Shared Files</button>
-            </form>
-            <p id="found?">
-            </p>
+                <div id = "right">
+                    <h3>For the Files Belong to Other Clients.</h3>
 
-            <!-- Test getSocketAddressById endpoint -->
-            <form id="getSocketAddressByIdForm">
-                <label for="getIdInput">ID: </label>
-                <input type="number" id="getIdInput" name="id">
-                <button type="button" onclick="getSocketAddressById()">Get Socket Address by ID</button>
-            </form>
-            <p id="got?">
-            </p>
+                    <h4>Search a Shared File from the Service</h4>
+                    <div>
+                        <label for="findFilesInput">Enter File Name: </label>
+                        <input type="text" id="findFilesInput" name="filename">
+                    </div>
+                    <div>
+                        <button type="button" onclick="findSharedFiles()">Search</button>
+                        <p id="found?"></p>
+                    </div>
 
+                    <h4>Get Client Socket Address by ID</h4>
+                    <div>
+                        <label for="getIdInput">Enter ID: </label>
+                        <input type="number" id="getIdInput" name="id">
+                    </div>
+                    <div>
+                        <button type="button" onclick="getSocketAddressById()">Get</button>
+                        <p id="got?"></p>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-<footer>
-    <p>The source is in <code>src/main/webapp/index.html</code>.</p>
-</footer>
-
 <script>
     // JavaScript functions to test endpoints
     function registerFile() {
@@ -128,43 +104,36 @@
         const port = document.getElementById('portInput').value;
         const resultContainer = document.getElementById('registered?');
 
-        const formData = new FormData();
-        formData.append('fileName', fileName);
-        formData.append('ipAddress', ipAddress);
-        formData.append('port', port);
+        const urlEncodedData = `fileName=${fileName}&ipAddress=${ipAddress}&port=${port}`;
 
         fetch(`/share/registerFile`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: formData
+            body: urlEncodedData
         }).then(response => displayEndpointResult(response, resultContainer));
     }
 
     function cancelSharing() {
-        const fileName = document.getElementById('cancelFileNameInput').value;
-        const ipAddress = document.getElementById('cancelIpAddressInput').value;
-        const port = document.getElementById('cancelPortInput').value;
+        const fileName = document.getElementById('fileNameInput').value;
+        const ipAddress = document.getElementById('ipAddressInput').value;
+        const port = document.getElementById('portInput').value;
         const resultContainer = document.getElementById('cancelled?');
 
-        const formData = new FormData();
-        formData.append('fileName', fileName);
-        formData.append('ipAddress', ipAddress);
-        formData.append('port', port);
+        const urlEncodedData = `fileName=${fileName}&ipAddress=${ipAddress}&port=${port}`;
 
         fetch(`/share/cancelSharing`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: formData
+            body: urlEncodedData
         }).then(response => displayEndpointResult(response, resultContainer));
     }
 
     function findSharedFiles() {
-        let fileName = document.getElementById('findFilesInput').value;
-        if (fileName.trim() === '') fileName = null;
+        const fileName = document.getElementById('findFilesInput').value;
         const resultContainer = document.getElementById('found?');
 
         fetch(`/share/findSharedFiles/${fileName}`)
@@ -172,8 +141,7 @@
     }
 
     function getSocketAddressById() {
-        let id = document.getElementById('getIdInput').value;
-        if (id.trim() === '') {id = 0;}
+        const id = document.getElementById('getIdInput').value;
         const resultContainer = document.getElementById('got?');
 
         fetch(`/share/getSocketAddressById/${id}`)
@@ -190,8 +158,14 @@
         resultContainer.innerHTML = '';
         resultContainer.appendChild(statusElement);
         resultContainer.appendChild(contentElement);
+
+        if (response.status === 200) {
+            resultContainer.style.color = 'blue';
+        } else {
+            resultContainer.style.color = 'red';
+        }
+
     }
 </script>
-
 </body>
 </html>
