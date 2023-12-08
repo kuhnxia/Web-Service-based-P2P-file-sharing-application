@@ -38,4 +38,8 @@ public class FileShareServiceIT {
 
     @Inject
     FileShareService service;
+
+    @Test
+    public void test() {
+    }
 }
