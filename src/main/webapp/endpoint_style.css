@@ -19,17 +19,42 @@ div label {
     text-align: left;
 }
 
-#left {
-    float: left;
-    width: 45%;
-    margin-right: 5%;
+ .logo {
+     text-align: center;
+     margin-bottom: 20px;
+ }
+
+.logo img {
+    width: 100%;
+    max-width: 200px;
+    display: block;
+    margin: 0 auto;
 }
 
-#right {
-    float: right;
-    width: 45%;
-    margin-left: 5%;
+h1 {
+    text-align: center;
 }
+
+#left, #right {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+    #left, #right {
+        width: 46%;
+        float: left;
+        margin-right: 1%;
+        margin-left: 3%;
+    }
+
+    #right {
+        float: right;
+        margin-right: 1%;
+        margin-left: 3%;
+    }
+}
+
 .wrapper::after {
     content: "";
     display: table;
