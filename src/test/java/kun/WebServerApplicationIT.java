@@ -24,12 +24,12 @@ public class WebServerApplicationIT {
         try (Client client = ClientBuilder.newClient()) {
             Response response = client
                     .target(URI.create("http://localhost:8080/"))
-                    .path("/share/World")
+                    .path("/share/hello/World")
                     .request()
                     .get();
 
             assertEquals(200, response.getStatus());
-            assertEquals("Hello 'World'.", response.readEntity(String.class));
+            assertEquals("Hello World.", response.readEntity(String.class));
 
         }
     }

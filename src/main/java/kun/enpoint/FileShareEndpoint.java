@@ -6,6 +6,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import kun.exceptions.*;
+import kun.exceptions.NotFoundException;
 import kun.service.FileShareService;
 
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ public class FileShareEndpoint {
 	private FileShareService service;
 
 	@GET
-	@Path("/{name}")
+	@Path("/hello/{name}")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response sayHello(final @PathParam("name") String name) {
 		String response = service.hello(name);
@@ -68,12 +69,12 @@ public class FileShareEndpoint {
 		try {
 			service.cancelSharing(fileName, ipAddress, port);
 			status = Response.Status.OK;
-			response = "The shared file has no longer shareable.";
+			response = "The shared file is no longer shareable.";
 		} catch (SQLException e) {
 			status = Response.Status.INTERNAL_SERVER_ERROR;
 			response = e.getMessage();
-		} catch (NotModifiedException e) {
-			status = Response.Status.NOT_MODIFIED;
+		} catch (NotFoundException e) {
+			status = Response.Status.NOT_FOUND;
 			response = e.getMessage();
 		}
 		return Response.status(status)
@@ -92,7 +93,7 @@ public class FileShareEndpoint {
 			if (!response.equals("")) {
 				status = Response.Status.OK;
 			} else {
-				status = Response.Status.NO_CONTENT;
+				status = Response.Status.NOT_FOUND;
 				response = "No Match Result.";
 			}
 		} catch (SQLException e) {

@@ -4,7 +4,7 @@ import jakarta.inject.Inject;
 import kun.dao.SharedFileDao;
 import kun.entity.SharedFile;
 import kun.exceptions.ConflictException;
-import kun.exceptions.NotModifiedException;
+import kun.exceptions.NotFoundException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -20,7 +20,7 @@ public class FileShareService {
     SharedFileDao sharedFileDao;
 
     public String hello(String name) {
-        return String.format("Hello '%s'.", name);
+        return String.format("Hello %s.", name);
     }
 
     /**
@@ -70,7 +70,7 @@ public class FileShareService {
             }
         }
 
-        throw new NotModifiedException("The shared file doesn't exist");
+        throw new NotFoundException("The shared file doesn't exist");
     }
 
     /**
@@ -87,7 +87,7 @@ public class FileShareService {
 
         // Find all shared files with the target filename.
         for (SharedFile sharedFile : sharedFiles) {
-            if (sharedFile.getFilename().equals(filename)) {
+            if (filename != null && sharedFile.getFilename().equals(filename)) {
                 filesInfo += sharedFile.getId() + " ";
             }
         }

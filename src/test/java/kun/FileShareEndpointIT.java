@@ -28,12 +28,12 @@ public class FileShareEndpointIT {
         try (Client client = ClientBuilder.newClient()) {
             Response response = client
                     .target(URI.create(BASE_URI))
-                    .path("/World")
+                    .path("/hello/World")
                     .request()
                     .get();
 
             assertEquals(200, response.getStatus());
-            assertEquals("Hello 'World'.", response.readEntity(String.class));
+            assertEquals("Hello World.", response.readEntity(String.class));
         }
     }
 
@@ -86,7 +86,7 @@ public class FileShareEndpointIT {
                     .request()
                     .get();
 
-            assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
             // Add additional assertions based on your service behavior
         }
     }
