@@ -19,10 +19,6 @@ public class FileShareService {
     @Inject
     SharedFileDao sharedFileDao;
 
-    public String hello(String name) {
-        return String.format("Hello %s.", name);
-    }
-
     /**
      * Registers a file for sharing in the P2P file sharing system.
      *

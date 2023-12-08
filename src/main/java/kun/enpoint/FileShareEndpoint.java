@@ -17,15 +17,6 @@ public class FileShareEndpoint {
 	@Inject
 	private FileShareService service;
 
-	@GET
-	@Path("/hello/{name}")
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response sayHello(final @PathParam("name") String name) {
-		String response = service.hello(name);
-		
-		return Response.ok(response).build();
-	}
-
 	@POST
 	@Path("/registerFile")
 	@Produces(MediaType.TEXT_PLAIN)

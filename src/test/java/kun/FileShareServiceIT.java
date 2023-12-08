@@ -38,13 +38,4 @@ public class FileShareServiceIT {
 
     @Inject
     FileShareService service;
-
-    @Test
-    public void testService() {
-        String result = service.hello("World");
-        assertEquals("Hello World.", result);
-
-        result = service.hello("Monde");
-        assertEquals("Hello Monde.", result);
-    }
 }
