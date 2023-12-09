@@ -11,7 +11,8 @@ import java.util.List;
 import jakarta.enterprise.context.ApplicationScoped;
 /**
  * The FileShareImpl class implements the FileShare interface and provides the server-side
- * implementation for file sharing operations using CORBA.
+ * implementation for file sharing operations using Jboss.
+ * @author Kun Xia
  */
 @ApplicationScoped
 public class FileShareService {

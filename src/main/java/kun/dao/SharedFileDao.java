@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * The SharedFileDao class provides methods to interact with the SharedFiles table in the database.
+ * @author Kun Xia
  */
 @ApplicationScoped
 public class SharedFileDao {

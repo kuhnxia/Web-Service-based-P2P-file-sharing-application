@@ -18,7 +18,6 @@ import java.sql.SQLException;
  * finding shared files, and retrieving socket addresses by file sharer ID.
  *
  * @author Kun Xia
- * @version 1.0.0-SNAPSHOT
  */
 @Path("/")
 public class FileShareEndpoint {

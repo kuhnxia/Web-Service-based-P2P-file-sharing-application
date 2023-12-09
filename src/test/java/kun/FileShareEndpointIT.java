@@ -16,6 +16,8 @@ import static org.junit.Assert.*;
 
 /**
  * Run integration tests against the server and the deployed application.
+ * Before run the testers, first ensure you are not registering a file
+ * with name "test.jpg" and socket address "1.1.1.1:9999".
  */
 @RunAsClient
 @RunWith(Arquillian.class)

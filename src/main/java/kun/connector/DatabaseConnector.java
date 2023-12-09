@@ -6,6 +6,7 @@ import java.sql.*;
 
 /**
  * The DatabaseConnector class is responsible for establishing and managing connections to the MySQL database.
+ * @author Kun Xia
  */
 @ApplicationScoped
 public class DatabaseConnector {

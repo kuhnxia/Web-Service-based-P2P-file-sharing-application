@@ -4,6 +4,7 @@ import java.util.Objects;
 
 /**
  * The SharedFile class represents a file shared by clients in the P2P file sharing system.
+ * @author Kun Xia
  */
 public class SharedFile {
     private int id;
