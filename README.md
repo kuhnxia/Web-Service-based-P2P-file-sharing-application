@@ -1,50 +1,111 @@
 # Web-Service-based-P2P-file-sharing-application
 
-- This is a Jboss Server for file information registration issues.
+- This is a Jboss Server for file share registration information management!
 
-## Building the application
+## Quick Start
 
-- To run the application, you use Maven:
+#### 1. Prepare
+- Waiting Maven auto-building completed.
+- Choose Java 17 as the Project JDK.
+- Installed MySQL and Workbench.
+- Prepared a MySQL connection with hostname, port, username, and password.
+
+#### 2. Code Change
+- Place the values of the following three constants in [DatabaseConnector.java](src/main/java/kun/connector/DatabaseConnector.java) to your MySQL connection setting.
+```java
+private static final String URL = "jdbc:mysql://localhost:3306/";
+private static final String USERNAME = "root";
+private static final String PASSWORD = "MyNewPass";
+```
+#### 3. Package
+- Package the project
 ```shell
 mvn clean package
 ```
-- Maven will compile the application, provision a WildFly server. 
+- Maven will compile the application, provision a WildFly server.
 - The WildFly server is created in `target/server` with the application deployed in it.
+#### 4. Run
+- Run the server on all available IP addresses:
+- macOS:
+```shell
+./target/server/bin/standalone.sh -b 0.0.0.0
+```
+- windows:
+- please use [standalone.bat](target/server/bin/standalone.bat)
 
-## Running the application
+## Setup Details
 
-### On macOS
-#### a. Only running on localhost
+### A. Maven
+- This project is using Maven for Dependency management!
+- See dependencies in [pom.xml](pom.xml)
+
+### B. JDK
+- Java 17 is set for this project.
+- However, any JDK that supports Wildfly may work.
+
+### C. JDBC
+
+#### 1. JDBC Driver
+- Dependency `mysql-connector-java` already added to maven!
+
+#### 2. Ensure MySQL and WorkBench installed on your computer.
+
+#### 3. Change the MySQL setting 
+- Change the MySQL setting to your MySQL connection setting if you not do that.
+- Place the values of the following three constants in [DatabaseConnector.java](src/main/java/kun/connector/DatabaseConnector.java).
+```java
+private static final String URL = "jdbc:mysql://localhost:3306/";
+private static final String USERNAME = "root";
+private static final String PASSWORD = "MyNewPass";
+```
+
+### D. Jboss(WildFly)
+
+#### 1. Building the application
+
+- To build the application:
+```shell
+mvn clean package
+```
+- To build the application with testers:
+```shell
+mvn clean install
+```
+#### 2. Running the application (macOS)
+##### a. Only running on localhost
 ```shell
 ./target/server/bin/standalone.sh
 ```
 - Once WildFly is running, the application can be accessed at http://localhost:8080
-#### b. Running on all available IP addresses or a specific one.
+##### b. Running on all available IP addresses or a specific one.
 ```shell
 ./target/server/bin/standalone.sh -b 0.0.0.0
 ```
+- If one of your ip is, for example, 192.168.0.4
 ```shell
 ./target/server/bin/standalone.sh -b 192.168.0.4
 ```
-- Once WildFly is running, other devices in the local can access this application at http://192.168.0.4:8080
-#### c. Add an admin/application user
+- Once WildFly is running, other devices in the local network can access this application by your IP.
+
+##### c. Add an admin/application user
 ```shell
 ./target/server/bin/add-user.sh
 ```
 - Manage your server at http://127.0.0.1:9990/management
 
-### On windows
-- please use `target/server/bin/standalone.bat` and `target/server/bin/add-user.bat`.
+##### d. On windows
+- please use [standalone.bat](target/server/bin/standalone.bat) and [add-user.bat](target/server/bin/add-user.bat)
 
-## Testing the application
-
-- To run integration tests to verify the application, you use Maven:
+## Test
+- Basic endpoint testers added.
+- To run integration tests to verify the application::
 ```shell
 mvn clean package verify
 ```
-- Tests in `src/test` are run against the server in `target/server`.
+- Tests in [src/test](src/test/java/kun) are run against the server in `target/server`.
 
-## Resources
 
-* [WildFly](https://wildfly.org)
-* [WildFly Documentation](https://docs.wildfly.org)
+## WebApp
+
+- Basic functions implemented.
+- You can test the APIs by http://localhost:8080
