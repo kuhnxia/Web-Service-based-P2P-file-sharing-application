@@ -25,7 +25,8 @@ public class FileShareService {
      * @param fileName  The name of the file to be registered.
      * @param ipAddress The IP address of the client sharing the file.
      * @param port      The port on which the client is sharing the file.
-     * @return A message indicating the success or failure of the registration process.
+     * @return A boolean indicating the success or failure of the registration process.
+     * @throws SQLException If a SQL exception occurs.
      */
     public boolean registerFile(String fileName, String ipAddress, int port) throws SQLException {
         SharedFile newSharedFile = new SharedFile(fileName, ipAddress, port);
@@ -50,7 +51,8 @@ public class FileShareService {
      * @param fileName  The name of the file to be canceled for sharing.
      * @param ipAddress The IP address of the client canceling the sharing.
      * @param port      The port on which the client is canceling the sharing.
-     * @return A message indicating the success or failure of the canceling process.
+     * @return A boolean indicating the success or failure of the canceling process.
+     * @throws SQLException If a SQL exception occurs.
      */
     public boolean cancelSharing(String fileName, String ipAddress, int port) throws SQLException {
         SharedFile newSharedFile = new SharedFile(fileName, ipAddress, port);
@@ -74,6 +76,7 @@ public class FileShareService {
      *
      * @param filename The name of the file to be searched.
      * @return A string containing the IDs of the shared files with the target filename.
+     * @throws SQLException If a SQL exception occurs.
      */
     public String findSharedFiles(String filename) throws SQLException {
         // Get all the share files from the database.
@@ -95,6 +98,7 @@ public class FileShareService {
      *
      * @param id The ID of the shared file.
      * @return The socket address in the format "ip_address:port".
+     * @throws SQLException If a SQL exception occurs.
      */
     public String getSocketAddressById(int id) throws SQLException {
         String socketInfo = "";

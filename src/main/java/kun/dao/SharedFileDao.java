@@ -15,15 +15,16 @@ import java.util.List;
 @ApplicationScoped
 public class SharedFileDao {
 
+    @Inject
+    private DatabaseConnector databaseConnector;
+
     /**
      * Creates a new shared file entry in the database.
      *
      * @param sharedFile The SharedFile object representing the file to be registered.
-     * @return A message indicating the result of the operation.
+     * @return A boolean indicating the result of the operation.
+     * @throws SQLException If a SQL exception occurs.
      */
-    @Inject
-    private DatabaseConnector databaseConnector;
-
     public boolean createSharedFile(SharedFile sharedFile) throws SQLException {
         Connection connection = databaseConnector.getConnection();
 
@@ -53,6 +54,7 @@ public class SharedFileDao {
      *
      * @param fileId The ID of the shared file.
      * @return The SharedFile object representing the retrieved file, or null if not found.
+     * @throws SQLException If a SQL exception occurs.
      */
     public SharedFile getSharedFileById(int fileId) throws SQLException {
         Connection connection = databaseConnector.getConnection();
@@ -73,6 +75,7 @@ public class SharedFileDao {
      * Retrieves all shared files from the database.
      *
      * @return A list of SharedFile objects representing all shared files in the database.
+     * @throws SQLException If a SQL exception occurs.
      */
     public List<SharedFile> getAllSharedFiles() throws SQLException {
         List<SharedFile> sharedFiles = new ArrayList<>();
@@ -93,7 +96,8 @@ public class SharedFileDao {
      * Deletes a shared file from the database based on its ID.
      *
      * @param fileId The ID of the shared file to be deleted.
-     * @return A message indicating the result of the operation.
+     * @return A boolean indicating the result of the operation.
+     * @throws SQLException If a SQL exception occurs.
      */
     public boolean deleteSharedFile(int fileId) throws SQLException {
         Connection connection = databaseConnector.getConnection();

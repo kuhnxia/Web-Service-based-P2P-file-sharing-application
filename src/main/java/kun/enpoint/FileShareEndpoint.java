@@ -11,12 +11,29 @@ import kun.service.FileShareService;
 
 import java.sql.SQLException;
 
+/**
+ * WildFly web service endpoint for file sharing operations.
+ *
+ * This class defines methods for registering files, canceling file sharing,
+ * finding shared files, and retrieving socket addresses by file sharer ID.
+ *
+ * @author Kun Xia
+ * @version 1.0.0-SNAPSHOT
+ */
 @Path("/")
 public class FileShareEndpoint {
 
 	@Inject
 	private FileShareService service;
 
+	/**
+	 * Registers a new file for sharing.
+	 *
+	 * @param fileName   The name of the file to be registered.
+	 * @param ipAddress  The IP address of the file sharer.
+	 * @param port       The port number on which the file is shared.
+	 * @return Response indicating the status of the registration.
+	 */
 	@POST
 	@Path("/registerFile")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -46,6 +63,14 @@ public class FileShareEndpoint {
 
 	}
 
+	/**
+	 * Cancels sharing of a file.
+	 *
+	 * @param fileName   The name of the file to stop sharing.
+	 * @param ipAddress  The IP address of the file sharer.
+	 * @param port       The port number on which the file is shared.
+	 * @return Response indicating the status of canceling file sharing.
+	 */
 	@PUT
 	@Path("/cancelSharing")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -73,6 +98,12 @@ public class FileShareEndpoint {
 				.build();
 	}
 
+	/**
+	 * Finds shared files by filename.
+	 *
+	 * @param filename   The name of the file to search for.
+	 * @return Response containing the status and search results.
+	 */
 	@GET
 	@Path("/findSharedFiles/{filename}")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -96,6 +127,12 @@ public class FileShareEndpoint {
 				.build();
 	}
 
+	/**
+	 * Gets the socket address of a file sharer by its ID.
+	 *
+	 * @param id   The ID of the file sharer.
+	 * @return Response containing the status and socket address.
+	 */
 	@GET
 	@Path("/getSocketAddressById/{id}")
 	@Produces(MediaType.TEXT_PLAIN)
