@@ -6,12 +6,13 @@ import java.sql.*;
 
 /**
  * The DatabaseConnector class is responsible for establishing and managing connections to the MySQL database.
+ * @author Kun Xia
  */
 @ApplicationScoped
 public class DatabaseConnector {
-    private final String URL = "jdbc:mysql://localhost:3306/";
-    private final String USERNAME = "root";
-    private final String PASSWORD = "MyNewPass";
+    private final String URL = "jdbc:mysql://localhost:3306/"; //Set it to yours
+    private final String USERNAME = "root"; //Set it to yours
+    private final String PASSWORD = "MyNewPass"; //Set it to yours
     private final String DATABASE_NAME = "p2p_file_sharing_db";
 
     /**

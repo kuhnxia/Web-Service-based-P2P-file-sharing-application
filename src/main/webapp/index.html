@@ -1,78 +1,149 @@
-<!--
-  ~ JBoss, Home of Professional Open Source.
-  ~ Copyright (c) 2023, Red Hat, Inc., and individual contributors
-  ~ as indicated by the @author tags. See the copyright.txt file in the
-  ~ distribution for a full listing of individual contributors.
-  ~
-  ~ This is free software; you can redistribute it and/or modify it
-  ~ under the terms of the GNU Lesser General Public License as
-  ~ published by the Free Software Foundation; either version 2.1 of
-  ~ the License, or (at your option) any later version.
-  ~
-  ~ This software is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  ~ Lesser General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU Lesser General Public
-  ~ License along with this software; if not, write to the Free
-  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-  -->
+
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Welcome to WildFly Application Server</title>
+    <title>Welcome to Jboss File Register Server</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="normalize.min.css">
-    <link rel="stylesheet" href="wildfly.css">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
-    <script>
-        (() => {
-            "use script";
-            window.addEventListener("load", () => {
-                const button = document.querySelector("button[type='submit']");
-                button.addEventListener("click", (event) => {
-                    event.preventDefault();
-                    let name = document.querySelector('#nameInput');
-                    name = encodeURIComponent(name.value);
-                    const result = document.querySelector('#result');
-                    fetch(`/share/${name}`)
-                        .then(response => {
-                            if (response.status === 200) {
-                                response.text().then(content => result.textContent = content);
-                            } else {
-                                result.textContent = `Unexpected response ${response.status}`;
-                            }
-                        });
-                });
-            });
-        })();
-    </script>
+    <link rel="stylesheet" href="endpoint_style.css">
 </head>
 <body>
 <div class="wrapper">
     <div class="content">
         <div class="logo">
-            <img src="wildfly_logo.png" alt="Logo" title="Logo"/>
+            <img src="myLogo.JPG" alt="Logo" title="Logo"/>
         </div>
-        <h1>Getting Started</h1>
+        <h1>P2P File Share Management System</h1>
         <div id="interactive">
             <form name="nameForm">
-                <label for="nameInput">Name: </label>
-                <input type="text" id="nameInput">
-                <button type="submit">Say Hello</button>
+                <div id = "left">
+                    <h3>A. For the Files Belong to You</h3>
+                    <h4>Enter Your File Name with Client Socket Address</h4>
+                    <div>
+                        <label for="ipAddressInput">Enter IP: </label>
+                        <input type="text" id="ipAddressInput" name="ipAddress">
+                    </div>
+                    <div>
+                        <label for="portInput">Enter Port: </label>
+                        <input type="number" id="portInput" name="port">
+                    </div>
+                    <div>
+                        <label for="fileNameInput">Enter Your File Name: </label>
+                        <input type="text" id="fileNameInput" name="fileName">
+                    </div>
+
+                    <h4>Register Your File with above Socket Address</h4>
+                    <div></div>
+                    <button type="button" onclick="registerFile()">Register</button>
+                    <p id = "registered?"></p>
+
+                    <h4>Cancel Your File with above Socket Address</h4>
+                    <div>
+                        <button type="button" onclick="cancelSharing()">Cancel</button>
+                        <p id = "cancelled?"></p>
+                    </div>
+                </div>
+
+                <div id = "right">
+                    <h3>B. For the Files Belong to Other Clients.</h3>
+
+                    <h4>Search a Shared File from the Service</h4>
+                    <div>
+                        <label for="findFilesInput">Enter File Name: </label>
+                        <input type="text" id="findFilesInput" name="filename">
+                    </div>
+                    <div>
+                        <button type="button" onclick="findSharedFiles()">Search</button>
+                        <p id="found?"></p>
+                    </div>
+
+                    <h4>Get Client Socket Address by ID</h4>
+                    <div>
+                        <label for="getIdInput">Enter ID: </label>
+                        <input type="number" id="getIdInput" name="id">
+                    </div>
+                    <div>
+                        <button type="button" onclick="getSocketAddressById()">Get</button>
+                        <p id="got?"></p>
+                    </div>
+                </div>
             </form>
-            <p id="result">
-            </p>
         </div>
     </div>
 </div>
-<footer>
-  <p>This page is served by your application. The source is in <code>src/main/webapp/index.html</code>.</p>      
-</footer>
+<script>
+    // JavaScript functions to test endpoints
+    function registerFile() {
+        const fileName = document.getElementById('fileNameInput').value;
+        const ipAddress = document.getElementById('ipAddressInput').value;
+        const port = document.getElementById('portInput').value;
+        const resultContainer = document.getElementById('registered?');
+
+        const urlEncodedData = `fileName=${fileName}&ipAddress=${ipAddress}&port=${port}`;
+
+        fetch(`/share/registerFile`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: urlEncodedData
+        }).then(response => displayEndpointResult(response, resultContainer));
+    }
+
+    function cancelSharing() {
+        const fileName = document.getElementById('fileNameInput').value;
+        const ipAddress = document.getElementById('ipAddressInput').value;
+        const port = document.getElementById('portInput').value;
+        const resultContainer = document.getElementById('cancelled?');
+
+        const urlEncodedData = `fileName=${fileName}&ipAddress=${ipAddress}&port=${port}`;
+
+        fetch(`/share/cancelSharing`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: urlEncodedData
+        }).then(response => displayEndpointResult(response, resultContainer));
+    }
+
+    function findSharedFiles() {
+        const fileName = document.getElementById('findFilesInput').value;
+        const resultContainer = document.getElementById('found?');
+
+        fetch(`/share/findSharedFiles/${fileName}`)
+            .then(response => displayEndpointResult(response, resultContainer));
+    }
+
+    function getSocketAddressById() {
+        const id = document.getElementById('getIdInput').value;
+        const resultContainer = document.getElementById('got?');
+
+        fetch(`/share/getSocketAddressById/${id}`)
+            .then(response => displayEndpointResult(response, resultContainer));
+    }
+
+    function displayEndpointResult(response, resultContainer) {
+        const statusElement = document.createElement('p');
+        statusElement.textContent = `${response.status} ${response.statusText}: `;
+
+        const contentElement = document.createElement('p');
+        response.text().then(content => contentElement.textContent = `${content}`);
+
+        resultContainer.innerHTML = '';
+        resultContainer.appendChild(statusElement);
+        resultContainer.appendChild(contentElement);
+
+        if (response.status === 200) {
+            resultContainer.style.color = 'blue';
+        } else {
+            resultContainer.style.color = 'red';
+        }
+
+    }
+</script>
 </body>
 </html>

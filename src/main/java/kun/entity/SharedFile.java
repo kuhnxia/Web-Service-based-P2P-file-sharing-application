@@ -4,12 +4,13 @@ import java.util.Objects;
 
 /**
  * The SharedFile class represents a file shared by clients in the P2P file sharing system.
+ * @author Kun Xia
  */
 public class SharedFile {
     private int id;
-    private String filename;
-    private String ipAddress;
-    private int port;
+    private String filename = "null";
+    private String ipAddress = "null";
+    private int port = 0;
 
     /**
      * Constructs a SharedFile object with the specified filename, IP address, and port.
@@ -19,8 +20,10 @@ public class SharedFile {
      * @param port      The port on which the client is sharing the file.
      */
     public SharedFile(String filename, String ipAddress, int port) {
-        this.filename = filename;
-        this.ipAddress = ipAddress;
+        if (filename != null)
+            this.filename = filename;
+        if (ipAddress != null)
+            this.ipAddress = ipAddress;
         this.port = port;
     }
 
